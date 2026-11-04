@@ -63,18 +63,17 @@ banner() {
 
 print_endpoints() {
   echo ""
-  echo -e "${GREEN}Service Endpoints:${NC}"
+  echo -e "${GREEN}Service Endpoints (Swagger UI & Health):${NC}"
   echo "  - Web Marketplace (Next.js) : http://localhost:3000"
-  echo "  - API Gateway               : http://localhost:8080"
-  echo "  - API Gateway Swagger UI    : http://localhost:8080/swagger-ui/index.html"
-  echo "  - Auth / IAM Service        : http://localhost:8081/actuator/health"
-  echo "  - User Profile Service      : http://localhost:8082/actuator/health"
-  echo "  - Gig Catalog Service       : http://localhost:8083/actuator/health"
-  echo "  - Order & Escrow Service    : http://localhost:8084/actuator/health"
-  echo "  - Payment & Wallet Service  : http://localhost:8085/actuator/health"
-  echo "  - Messaging & Chat Service  : http://localhost:8086/actuator/health"
-  echo "  - Review & Rating Service   : http://localhost:8087/actuator/health"
-  echo "  - Notification Service      : http://localhost:8088/actuator/health"
+  echo "  - API Gateway               : http://localhost:8080  | Swagger: http://localhost:8080/swagger-ui/index.html"
+  echo "  - Auth / IAM Service        : http://localhost:8081  | Swagger: http://localhost:8081/swagger-ui/index.html"
+  echo "  - User Profile Service      : http://localhost:8082  | Swagger: http://localhost:8082/swagger-ui/index.html"
+  echo "  - Gig Catalog Service       : http://localhost:8083  | Swagger: http://localhost:8083/swagger-ui/index.html"
+  echo "  - Order & Escrow Service    : http://localhost:8084  | Swagger: http://localhost:8084/swagger-ui/index.html"
+  echo "  - Payment & Wallet Service  : http://localhost:8085  | Swagger: http://localhost:8085/swagger-ui/index.html"
+  echo "  - Messaging & Chat Service  : http://localhost:8086  | Swagger: http://localhost:8086/swagger-ui/index.html"
+  echo "  - Review & Rating Service   : http://localhost:8087  | Swagger: http://localhost:8087/swagger-ui/index.html"
+  echo "  - Notification Service      : http://localhost:8088  | Swagger: http://localhost:8088/swagger-ui/index.html"
   echo ""
 }
 
