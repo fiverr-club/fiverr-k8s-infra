@@ -66,6 +66,7 @@ print_endpoints() {
   echo -e "${GREEN}Service Endpoints:${NC}"
   echo "  - Web Marketplace (Next.js) : http://localhost:3000"
   echo "  - API Gateway               : http://localhost:8080"
+  echo "  - API Gateway Swagger UI    : http://localhost:8080/swagger-ui/index.html"
   echo "  - Auth / IAM Service        : http://localhost:8081/actuator/health"
   echo "  - User Profile Service      : http://localhost:8082/actuator/health"
   echo "  - Gig Catalog Service       : http://localhost:8083/actuator/health"
