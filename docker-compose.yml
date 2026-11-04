@@ -57,14 +57,14 @@ services:
     environment:
       SERVER_PORT: 8080
       REDIS_HOST: fiverr-redis
-      AUTH_SERVICE_URL: http://fiverr-auth-service:8081
-      USER_SERVICE_URL: http://fiverr-user-service:8082
-      GIG_SERVICE_URL: http://fiverr-gig-service:8083
-      ORDER_SERVICE_URL: http://fiverr-order-service:8084
-      PAYMENT_SERVICE_URL: http://fiverr-payment-service:8085
-      MESSAGING_SERVICE_URL: http://fiverr-messaging-service:8086
-      REVIEW_SERVICE_URL: http://fiverr-review-service:8087
-      NOTIFICATION_SERVICE_URL: http://fiverr-notification-service:8088
+      AUTH_SERVICE_URI: http://fiverr-auth-service:8081
+      USER_SERVICE_URI: http://fiverr-user-service:8082
+      GIG_SERVICE_URI: http://fiverr-gig-service:8083
+      ORDER_SERVICE_URI: http://fiverr-order-service:8084
+      PAYMENT_SERVICE_URI: http://fiverr-payment-service:8085
+      MESSAGING_SERVICE_URI: http://fiverr-messaging-service:8086
+      REVIEW_SERVICE_URI: http://fiverr-review-service:8087
+      NOTIFICATION_SERVICE_URI: http://fiverr-notification-service:8088
     depends_on:
       - fiverr-redis
 
