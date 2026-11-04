@@ -77,8 +77,24 @@ print_endpoints() {
   echo ""
 }
 
+free_conflicting_ports() {
+  local target_ports=(3000 8080 8081 8082 8083 8084 8085 8086 8087 8088)
+  for port in "${target_ports[@]}"; do
+    # Find non-Docker processes holding the port on host
+    local pids
+    pids=$(lsof -iTCP:"$port" -sTCP:LISTEN -P -n 2>/dev/null | awk 'NR>1 && $1 !~ /com\.docke|vpnkit|Docker/ {print $2}' | sort -u || true)
+    for pid in $pids; do
+      if [[ -n "$pid" ]]; then
+        echo -e "${YELLOW}[Port Cleanup] Freeing port ${port} held by local process PID ${pid}...${NC}"
+        kill "$pid" 2>/dev/null || true
+      fi
+    done
+  done
+}
+
 start_docker() {
   banner
+  free_conflicting_ports
   echo -e "${BLUE}[Docker Compose] Starting PostgreSQL, Redis, Kafka, 9 Microservices, and Next.js Web...${NC}"
   cd "$K8S_INFRA_DIR"
   docker compose up --build -d
@@ -237,3 +253,4 @@ case "$MODE" in
     exit 1
     ;;
 esac
+
