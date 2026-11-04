@@ -79,9 +79,12 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://fiverr-postgres:5432/fiverr_auth
       SPRING_DATASOURCE_USERNAME: fiverr_admin
       SPRING_DATASOURCE_PASSWORD: FiverrClubStrongPgPassword2026!
+      REDIS_HOST: fiverr-redis
+      SPRING_DATA_REDIS_HOST: fiverr-redis
       KAFKA_BOOTSTRAP_SERVERS: fiverr-kafka:9092
     depends_on:
       - fiverr-postgres
+      - fiverr-redis
       - fiverr-kafka
 
   fiverr-user-service:
@@ -95,9 +98,12 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://fiverr-postgres:5432/fiverr_user
       SPRING_DATASOURCE_USERNAME: fiverr_admin
       SPRING_DATASOURCE_PASSWORD: FiverrClubStrongPgPassword2026!
+      REDIS_HOST: fiverr-redis
+      SPRING_DATA_REDIS_HOST: fiverr-redis
       KAFKA_BOOTSTRAP_SERVERS: fiverr-kafka:9092
     depends_on:
       - fiverr-postgres
+      - fiverr-redis
       - fiverr-kafka
 
   fiverr-gig-service:
@@ -109,6 +115,7 @@ services:
     environment:
       SERVER_PORT: 8083
       SPRING_DATASOURCE_URL: jdbc:postgresql://fiverr-postgres:5432/fiverr_gig
+      SPRING_DATASOURCE_DRIVER: org.postgresql.Driver
       SPRING_DATASOURCE_USERNAME: fiverr_admin
       SPRING_DATASOURCE_PASSWORD: FiverrClubStrongPgPassword2026!
       REDIS_HOST: fiverr-redis
@@ -127,6 +134,7 @@ services:
     environment:
       SERVER_PORT: 8084
       SPRING_DATASOURCE_URL: jdbc:postgresql://fiverr-postgres:5432/fiverr_order
+      SPRING_DATASOURCE_DRIVER: org.postgresql.Driver
       SPRING_DATASOURCE_USERNAME: fiverr_admin
       SPRING_DATASOURCE_PASSWORD: FiverrClubStrongPgPassword2026!
       KAFKA_BOOTSTRAP_SERVERS: fiverr-kafka:9092
@@ -143,6 +151,7 @@ services:
     environment:
       SERVER_PORT: 8085
       SPRING_DATASOURCE_URL: jdbc:postgresql://fiverr-postgres:5432/fiverr_payment
+      SPRING_DATASOURCE_DRIVER: org.postgresql.Driver
       SPRING_DATASOURCE_USERNAME: fiverr_admin
       SPRING_DATASOURCE_PASSWORD: FiverrClubStrongPgPassword2026!
       KAFKA_BOOTSTRAP_SERVERS: fiverr-kafka:9092
@@ -159,6 +168,7 @@ services:
     environment:
       SERVER_PORT: 8086
       SPRING_DATASOURCE_URL: jdbc:postgresql://fiverr-postgres:5432/fiverr_messaging
+      SPRING_DATASOURCE_DRIVER: org.postgresql.Driver
       SPRING_DATASOURCE_USERNAME: fiverr_admin
       SPRING_DATASOURCE_PASSWORD: FiverrClubStrongPgPassword2026!
       REDIS_HOST: fiverr-redis
@@ -177,6 +187,7 @@ services:
     environment:
       SERVER_PORT: 8087
       SPRING_DATASOURCE_URL: jdbc:postgresql://fiverr-postgres:5432/fiverr_review
+      SPRING_DATASOURCE_DRIVER: org.postgresql.Driver
       SPRING_DATASOURCE_USERNAME: fiverr_admin
       SPRING_DATASOURCE_PASSWORD: FiverrClubStrongPgPassword2026!
       KAFKA_BOOTSTRAP_SERVERS: fiverr-kafka:9092
@@ -193,6 +204,7 @@ services:
     environment:
       SERVER_PORT: 8088
       SPRING_DATASOURCE_URL: jdbc:postgresql://fiverr-postgres:5432/fiverr_notification
+      SPRING_DATASOURCE_DRIVER: org.postgresql.Driver
       SPRING_DATASOURCE_USERNAME: fiverr_admin
       SPRING_DATASOURCE_PASSWORD: FiverrClubStrongPgPassword2026!
       KAFKA_BOOTSTRAP_SERVERS: fiverr-kafka:9092
