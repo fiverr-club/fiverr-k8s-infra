@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fiverr-club
+  labels:
+    app.kubernetes.io/part-of: fiverr-club-ecosystem
+    environment: production

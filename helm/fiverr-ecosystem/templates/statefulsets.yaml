@@ -1,0 +1,173 @@
+{{- if .Values.stateful.postgres.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: fiverr-postgres
+  namespace: {{ .Values.global.namespace }}
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  clusterIP: None
+  selector:
+    app: fiverr-postgres
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: fiverr-postgres
+  namespace: {{ .Values.global.namespace }}
+spec:
+  serviceName: "fiverr-postgres"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fiverr-postgres
+  template:
+    metadata:
+      labels:
+        app: fiverr-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: {{ .Values.stateful.postgres.image }}
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: fiverr-common-secrets
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+            - name: init-scripts
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: init-scripts
+          configMap:
+            name: fiverr-postgres-init-scripts
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.stateful.postgres.storage }}
+{{- end }}
+---
+{{- if .Values.stateful.redis.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: fiverr-redis
+  namespace: {{ .Values.global.namespace }}
+spec:
+  ports:
+    - port: 6379
+      targetPort: 6379
+  clusterIP: None
+  selector:
+    app: fiverr-redis
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: fiverr-redis
+  namespace: {{ .Values.global.namespace }}
+spec:
+  serviceName: "fiverr-redis"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fiverr-redis
+  template:
+    metadata:
+      labels:
+        app: fiverr-redis
+    spec:
+      containers:
+        - name: redis
+          image: {{ .Values.stateful.redis.image }}
+          command: ["redis-server", "--appendonly", "yes"]
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.stateful.redis.storage }}
+{{- end }}
+---
+{{- if .Values.stateful.kafka.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: fiverr-kafka
+  namespace: {{ .Values.global.namespace }}
+spec:
+  ports:
+    - port: 9092
+      name: plaintext
+    - port: 9093
+      name: controller
+  clusterIP: None
+  selector:
+    app: fiverr-kafka
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: fiverr-kafka
+  namespace: {{ .Values.global.namespace }}
+spec:
+  serviceName: "fiverr-kafka"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fiverr-kafka
+  template:
+    metadata:
+      labels:
+        app: fiverr-kafka
+    spec:
+      containers:
+        - name: kafka
+          image: {{ .Values.stateful.kafka.image }}
+          ports:
+            - containerPort: 9092
+            - containerPort: 9093
+          env:
+            - name: KAFKA_NODE_ID
+              value: "1"
+            - name: KAFKA_PROCESS_ROLES
+              value: "broker,controller"
+            - name: KAFKA_LISTENERS
+              value: "PLAINTEXT://:9092,CONTROLLER://:9093"
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: "PLAINTEXT://fiverr-kafka.{{ .Values.global.namespace }}.svc.cluster.local:9092"
+            - name: KAFKA_CONTROLLER_LISTENER_NAMES
+              value: "CONTROLLER"
+            - name: KAFKA_CONTROLLER_QUORUM_VOTERS
+              value: "1@localhost:9093"
+            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+              value: "1"
+            - name: CLUSTER_ID
+              value: {{ .Values.stateful.kafka.clusterId | quote }}
+          volumeMounts:
+            - name: kafka-data
+              mountPath: /var/lib/kafka/data
+  volumeClaimTemplates:
+    - metadata:
+        name: kafka-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.stateful.kafka.storage }}
+{{- end }}

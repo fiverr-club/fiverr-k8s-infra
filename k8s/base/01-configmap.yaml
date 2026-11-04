@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fiverr-common-config
+  namespace: fiverr-club
+  labels:
+    app.kubernetes.io/part-of: fiverr-club-ecosystem
+data:
+  SPRING_PROFILES_ACTIVE: "prod,k8s"
+  POSTGRES_HOST: "fiverr-postgres.fiverr-club.svc.cluster.local"
+  POSTGRES_PORT: "5432"
+  REDIS_HOST: "fiverr-redis.fiverr-club.svc.cluster.local"
+  REDIS_PORT: "6379"
+  KAFKA_BOOTSTRAP_SERVERS: "fiverr-kafka.fiverr-club.svc.cluster.local:9092"
+  AUTH_SERVICE_URL: "http://fiverr-auth-service.fiverr-club.svc.cluster.local:8081"
+  USER_SERVICE_URL: "http://fiverr-user-service.fiverr-club.svc.cluster.local:8082"
+  GIG_SERVICE_URL: "http://fiverr-gig-service.fiverr-club.svc.cluster.local:8083"
+  ORDER_SERVICE_URL: "http://fiverr-order-service.fiverr-club.svc.cluster.local:8084"
+  PAYMENT_SERVICE_URL: "http://fiverr-payment-service.fiverr-club.svc.cluster.local:8085"
+  MESSAGING_SERVICE_URL: "http://fiverr-messaging-service.fiverr-club.svc.cluster.local:8086"
+  REVIEW_SERVICE_URL: "http://fiverr-review-service.fiverr-club.svc.cluster.local:8087"
+  NOTIFICATION_SERVICE_URL: "http://fiverr-notification-service.fiverr-club.svc.cluster.local:8088"
+  NEXT_PUBLIC_API_GATEWAY_URL: "https://api.fiverr.club/api/v1"
+  JAVA_TOOL_OPTIONS: "-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"

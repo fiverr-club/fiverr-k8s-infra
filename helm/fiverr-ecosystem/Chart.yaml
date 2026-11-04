@@ -1,0 +1,18 @@
+apiVersion: v2
+name: fiverr-ecosystem
+description: Umbrella Helm v3 chart for the Fiverr Club Freelance Marketplace Ecosystem (9 Spring Boot 3 DDD Microservices + Next.js 15 Web + Postgres/Redis/Kafka StatefulSets)
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - fiverr
+  - marketplace
+  - microservices
+  - spring-boot-3
+  - ddd
+  - hexagonal-architecture
+  - nextjs
+  - kubernetes
+maintainers:
+  - name: Fiverr Club Platform Architecture Team
+    url: https://github.com/fiverr-club

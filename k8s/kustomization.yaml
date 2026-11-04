@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: fiverr-club
+
+resources:
+  - base/00-namespace.yaml
+  - base/01-configmap.yaml
+  - base/02-secrets.yaml
+  - stateful/postgres-statefulset.yaml
+  - stateful/redis-statefulset.yaml
+  - stateful/kafka-statefulset.yaml
+  - services/fiverr-api-gateway.yaml
+  - services/fiverr-auth-service.yaml
+  - services/fiverr-user-service.yaml
+  - services/fiverr-gig-service.yaml
+  - services/fiverr-order-service.yaml
+  - services/fiverr-payment-service.yaml
+  - services/fiverr-messaging-service.yaml
+  - services/fiverr-review-service.yaml
+  - services/fiverr-notification-service.yaml
+  - services/fiverr-web.yaml
+  - ingress/ingress.yaml
+  - security/network-policies.yaml
+  - availability/pdb.yaml
+
+commonLabels:
+  app.kubernetes.io/managed-by: kustomize
+  app.kubernetes.io/part-of: fiverr-club-ecosystem

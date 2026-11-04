@@ -1,0 +1,43 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: fiverr-api-gateway-pdb
+  namespace: fiverr-club
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: fiverr-api-gateway
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: fiverr-order-service-pdb
+  namespace: fiverr-club
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: fiverr-order-service
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: fiverr-payment-service-pdb
+  namespace: fiverr-club
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: fiverr-payment-service
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: fiverr-web-pdb
+  namespace: fiverr-club
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: fiverr-web

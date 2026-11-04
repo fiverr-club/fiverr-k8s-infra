@@ -1,0 +1,56 @@
+{{- range .Values.services }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Values.global.namespace }}
+  labels:
+    app: {{ .name }}
+    tier: {{ .tier }}
+    {{- include "fiverr-ecosystem.labels" $ | nindent 4 }}
+spec:
+  replicas: {{ .replicas }}
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+        tier: {{ .tier }}
+    spec:
+      containers:
+        - name: {{ .name }}
+          image: "{{ $.Values.global.imageRegistry }}/{{ .name }}:{{ $.Values.global.imageTag }}"
+          imagePullPolicy: {{ $.Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .port }}
+              name: http
+          env:
+            - name: SERVER_PORT
+              value: {{ .port | quote }}
+            {{- if .dbName }}
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://fiverr-postgres.{{ $.Values.global.namespace }}.svc.cluster.local:5432/{{ .dbName }}"
+            {{- end }}
+          envFrom:
+            - configMapRef:
+                name: fiverr-common-config
+            - secretRef:
+                name: fiverr-common-secrets
+          resources:
+            {{- toYaml .resources | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: {{ .healthPath }}
+              port: {{ .port }}
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: {{ .healthPath }}
+              port: {{ .port }}
+            initialDelaySeconds: 15
+            periodSeconds: 10
+{{- end }}

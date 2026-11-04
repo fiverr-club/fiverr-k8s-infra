@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fiverr-common-config
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "fiverr-ecosystem.labels" . | nindent 4 }}
+data:
+  SPRING_PROFILES_ACTIVE: "prod,k8s"
+  POSTGRES_HOST: "fiverr-postgres.{{ .Values.global.namespace }}.svc.cluster.local"
+  POSTGRES_PORT: "5432"
+  REDIS_HOST: "fiverr-redis.{{ .Values.global.namespace }}.svc.cluster.local"
+  REDIS_PORT: "6379"
+  KAFKA_BOOTSTRAP_SERVERS: "fiverr-kafka.{{ .Values.global.namespace }}.svc.cluster.local:9092"
+  NEXT_PUBLIC_API_GATEWAY_URL: "https://{{ .Values.global.apiDomain }}/api/v1"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fiverr-postgres-init-scripts
+  namespace: {{ .Values.global.namespace }}
+data:
+  01-init-databases.sql: |
+{{- range .Values.stateful.postgres.databases }}
+    CREATE DATABASE {{ . }};
+    GRANT ALL PRIVILEGES ON DATABASE {{ . }} TO {{ $.Values.stateful.postgres.username }};
+{{- end }}

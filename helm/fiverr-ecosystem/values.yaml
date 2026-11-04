@@ -1,0 +1,213 @@
+global:
+  namespace: fiverr-club
+  imageRegistry: ghcr.io/fiverr-club
+  imagePullPolicy: IfNotPresent
+  imageTag: "1.0.0"
+  domain: fiverr.club
+  apiDomain: api.fiverr.club
+
+stateful:
+  postgres:
+    enabled: true
+    image: postgres:16-alpine
+    storage: 20Gi
+    username: fiverr_admin
+    password: "FiverrClubStrongPgPassword2026!"
+    databases:
+      - fiverr_auth
+      - fiverr_user
+      - fiverr_gig
+      - fiverr_order
+      - fiverr_payment
+      - fiverr_messaging
+      - fiverr_review
+      - fiverr_notification
+  redis:
+    enabled: true
+    image: redis:7.4-alpine
+    storage: 5Gi
+  kafka:
+    enabled: true
+    image: apache/kafka:3.8.0
+    storage: 15Gi
+    clusterId: "MkU3OEVBNTcwNTJENDM2Qk"
+
+secrets:
+  jwtSecret: "9a8f7e6d5c4b3a210f9e8d7c6b5a4938271605f4e3d2c1b0a9f8e7d6c5b4a392"
+  stripeWebhookSecret: "whsec_fiverr_club_escrow_production_secret"
+
+services:
+  - name: fiverr-api-gateway
+    port: 8080
+    tier: gateway
+    replicas: 2
+    minReplicas: 2
+    maxReplicas: 8
+    cpuTarget: 70
+    dbName: ""
+    healthPath: /actuator/health
+    resources:
+      requests:
+        cpu: 200m
+        memory: 384Mi
+      limits:
+        cpu: 1000m
+        memory: 768Mi
+
+  - name: fiverr-auth-service
+    port: 8081
+    tier: backend
+    replicas: 2
+    minReplicas: 2
+    maxReplicas: 6
+    cpuTarget: 75
+    dbName: fiverr_auth
+    healthPath: /actuator/health
+    resources:
+      requests:
+        cpu: 150m
+        memory: 384Mi
+      limits:
+        cpu: 750m
+        memory: 768Mi
+
+  - name: fiverr-user-service
+    port: 8082
+    tier: backend
+    replicas: 2
+    minReplicas: 2
+    maxReplicas: 6
+    cpuTarget: 75
+    dbName: fiverr_user
+    healthPath: /actuator/health
+    resources:
+      requests:
+        cpu: 150m
+        memory: 384Mi
+      limits:
+        cpu: 750m
+        memory: 768Mi
+
+  - name: fiverr-gig-service
+    port: 8083
+    tier: backend
+    replicas: 2
+    minReplicas: 2
+    maxReplicas: 8
+    cpuTarget: 70
+    dbName: fiverr_gig
+    healthPath: /actuator/health
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+
+  - name: fiverr-order-service
+    port: 8084
+    tier: backend
+    replicas: 2
+    minReplicas: 2
+    maxReplicas: 8
+    cpuTarget: 70
+    dbName: fiverr_order
+    healthPath: /actuator/health
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+
+  - name: fiverr-payment-service
+    port: 8085
+    tier: backend
+    replicas: 2
+    minReplicas: 2
+    maxReplicas: 8
+    cpuTarget: 70
+    dbName: fiverr_payment
+    healthPath: /actuator/health
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+
+  - name: fiverr-messaging-service
+    port: 8086
+    tier: backend
+    replicas: 2
+    minReplicas: 2
+    maxReplicas: 6
+    cpuTarget: 75
+    dbName: fiverr_messaging
+    healthPath: /actuator/health
+    resources:
+      requests:
+        cpu: 150m
+        memory: 384Mi
+      limits:
+        cpu: 750m
+        memory: 768Mi
+
+  - name: fiverr-review-service
+    port: 8087
+    tier: backend
+    replicas: 2
+    minReplicas: 2
+    maxReplicas: 6
+    cpuTarget: 75
+    dbName: fiverr_review
+    healthPath: /actuator/health
+    resources:
+      requests:
+        cpu: 150m
+        memory: 384Mi
+      limits:
+        cpu: 750m
+        memory: 768Mi
+
+  - name: fiverr-notification-service
+    port: 8088
+    tier: backend
+    replicas: 2
+    minReplicas: 2
+    maxReplicas: 6
+    cpuTarget: 75
+    dbName: fiverr_notification
+    healthPath: /actuator/health
+    resources:
+      requests:
+        cpu: 150m
+        memory: 384Mi
+      limits:
+        cpu: 750m
+        memory: 768Mi
+
+  - name: fiverr-web
+    port: 3000
+    tier: frontend
+    replicas: 2
+    minReplicas: 2
+    maxReplicas: 10
+    cpuTarget: 70
+    dbName: ""
+    healthPath: /
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+ingress:
+  enabled: true
+  className: nginx
+  tlsSecretName: fiverr-club-tls-secret

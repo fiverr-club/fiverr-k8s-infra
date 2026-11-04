@@ -1,0 +1,20 @@
+global:
+  namespace: fiverr-club
+  imageRegistry: ghcr.io/fiverr-club
+  imagePullPolicy: Always
+  imageTag: "1.0.0"
+  domain: fiverr.club
+  apiDomain: api.fiverr.club
+
+stateful:
+  postgres:
+    storage: 100Gi
+  redis:
+    storage: 20Gi
+  kafka:
+    storage: 50Gi
+
+ingress:
+  enabled: true
+  className: nginx
+  tlsSecretName: fiverr-club-prod-tls
