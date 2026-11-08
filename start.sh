@@ -8,6 +8,7 @@
 #   ./start.sh docker     Start full stack via Docker Compose (Postgres, Redis, Kafka, 9 Services, Web)
 #   ./start.sh local      Build & run all 9 Spring Boot microservices + Next.js Web locally on host
 #   ./start.sh web        Start Next.js Marketplace Web App only (http://localhost:3000)
+#   ./start.sh desktop    Build & launch FIVERREX Electron Desktop App (fiverr-app)
 #   ./start.sh k8s        Deploy full ecosystem to Kubernetes via Kustomize
 #   ./start.sh helm       Deploy full ecosystem to Kubernetes via Helm v3 chart
 #   ./start.sh test       Run unit tests across all 9 microservices + verify Next.js build
@@ -114,6 +115,16 @@ start_web_only() {
   echo $! > "$PID_DIR/fiverr-web.pid"
   echo -e "${GREEN}fiverr-web started (PID $(cat "$PID_DIR/fiverr-web.pid")) -> http://localhost:3000${NC}"
   echo -e "Logs: ${LOG_DIR}/fiverr-web.log"
+}
+
+start_desktop_app() {
+  banner
+  echo -e "${BLUE}[Electron] Building & launching fiverr-app (FIVERREX Desktop)...${NC}"
+  cd "$ROOT_DIR/fiverr-app"
+  if [[ ! -d "node_modules" ]]; then
+    npm install
+  fi
+  npm start
 }
 
 start_local() {
@@ -232,6 +243,9 @@ case "$MODE" in
     ;;
   web)
     start_web_only
+    ;;
+  desktop|electron|app)
+    start_desktop_app
     ;;
   k8s|kubernetes)
     start_k8s
