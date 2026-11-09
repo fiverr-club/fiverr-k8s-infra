@@ -79,9 +79,32 @@ print_endpoints() {
 }
 
 free_conflicting_ports() {
-  local target_ports=(3000 8080 8081 8082 8083 8084 8085 8086 8087 8088)
+  local target_ports=(3000 5432 6379 8080 8081 8082 8083 8084 8085 8086 8087 8088 9092)
+
+  # 1. Stop any non-fiverr Docker containers binding conflicting host ports
+  if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+    for port in "${target_ports[@]}"; do
+      local conflicting_containers
+      conflicting_containers=$(docker ps --filter "publish=${port}" --format "{{.Names}}" 2>/dev/null | grep -v "^fiverr-" || true)
+      for cname in $conflicting_containers; do
+        if [[ -n "$cname" ]]; then
+          echo -e "${YELLOW}[Port Cleanup] Stopping conflicting Docker container '${cname}' on port ${port}...${NC}"
+          docker stop "$cname" >/dev/null 2>&1 || true
+        fi
+      done
+    done
+  fi
+
+  # 2. Stop Homebrew redis/postgresql services if they hold 6379/5432
+  if command -v brew >/dev/null 2>&1; then
+    if lsof -iTCP:6379 -sTCP:LISTEN -P -n 2>/dev/null | grep -q "redis-ser"; then
+      echo -e "${YELLOW}[Port Cleanup] Stopping Homebrew redis service on port 6379...${NC}"
+      brew services stop redis >/dev/null 2>&1 || true
+    fi
+  fi
+
+  # 3. Stop any non-Docker local processes holding the target ports on host
   for port in "${target_ports[@]}"; do
-    # Find non-Docker processes holding the port on host
     local pids
     pids=$(lsof -iTCP:"$port" -sTCP:LISTEN -P -n 2>/dev/null | awk 'NR>1 && $1 !~ /com\.docke|vpnkit|Docker/ {print $2}' | sort -u || true)
     for pid in $pids; do
